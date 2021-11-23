@@ -11,8 +11,8 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SESSION_TYPE']='filesystem'
 app.config['SECRET_KEY'] = "manul"
 app.config['SESSION_PERMANENT']= False
-if not (os.path.exists(UPLOAD_FOLDER)):
-    os.mkdir(UPLOAD_FOLDER)
+#if not (os.path.exists(UPLOAD_FOLDER)):
+#    os.mkdir(UPLOAD_FOLDER)
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -31,8 +31,8 @@ def login():
             flash('No selected file')
             return redirect(request.url)
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            #filename = secure_filename(file.filename)
+            #file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             return ''
     return ''
 
