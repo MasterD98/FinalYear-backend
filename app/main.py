@@ -1,12 +1,8 @@
-from flask import Flask,request,flash,redirect,url_for
+from flask import Flask,request,flash,redirect
 from flask_cors import CORS
-import os
-from werkzeug.utils import secure_filename
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras.models import load_model
-import numpy as np
-import matplotlib.pyplot as plt
 from PIL import Image 
 
 app = Flask(__name__)
@@ -30,12 +26,10 @@ def login():
             return redirect(request.url)
 
         load_img_rz = Image.open(file).resize((224,224))
-
         img_array = keras.preprocessing.image.img_to_array(load_img_rz)
         img_array = tf.expand_dims(img_array, 0)  # Create batch axis
-
         predictions = model.predict(img_array)
         score = predictions[0]
-        return score[1]
+        return str(score[1])
     return ''
 
