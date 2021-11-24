@@ -2,20 +2,18 @@ from flask import Flask,request,flash,redirect,url_for
 from flask_cors import CORS
 import os
 from werkzeug.utils import secure_filename
-from werkzeug.wrappers import response
-UPLOAD_FOLDER = './uploadedImages'
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras.models import load_model
+import numpy as np
+import matplotlib.pyplot as plt
+from PIL import Image 
+
 app = Flask(__name__)
 CORS(app)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-app.config['SESSION_TYPE']='filesystem'
-app.config['SECRET_KEY'] = "manul"
-app.config['SESSION_PERMANENT']= False
-#if not (os.path.exists(UPLOAD_FOLDER)):
-#    os.mkdir(UPLOAD_FOLDER)
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+model = load_model('app\Models\dfmodel.tflearn')
+
 
 @app.route("/upload_file",methods=['GET','POST'])
 def login():
@@ -30,9 +28,14 @@ def login():
         if file.filename == '':
             flash('No selected file')
             return redirect(request.url)
-        if file and allowed_file(file.filename):
-            #filename = secure_filename(file.filename)
-            #file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return ''
+
+        load_img_rz = Image.open(file).resize((224,224))
+
+        img_array = keras.preprocessing.image.img_to_array(load_img_rz)
+        img_array = tf.expand_dims(img_array, 0)  # Create batch axis
+
+        predictions = model.predict(img_array)
+        score = predictions[0]
+        return score[1]
     return ''
 
