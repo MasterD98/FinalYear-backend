@@ -8,8 +8,12 @@ from PIL import Image
 app = Flask(__name__)
 CORS(app)
 
-model = load_model('app\Models\dfmodel.tflearn')
-
+dfmodel = load_model('app\Models\dfmodel.tflearn')
+akiecmodel = load_model('app\Models\akiecmodel.tflearn')
+bklmodel = load_model('app\Models\bklmodel.tflearn')
+melmodel = load_model('app\Models\melmodel.tflearn')
+nvmodel = load_model('app\Models\nvmodel.tflearn')
+vascmodel = load_model('app\Models\vascmodel.tflearn')
 
 @app.route("/upload_file",methods=['GET','POST'])
 def login():
